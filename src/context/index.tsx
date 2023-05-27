@@ -15,14 +15,13 @@ import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
 interface Web3ContextType {
   setAppStatus: Dispatch<any>
   setIsModuleEnabled: Dispatch<any>
+
   appStatus: AppStatus
   provider: ethers.providers.Web3Provider
   signer: ethers.providers.JsonRpcSigner
   safeContract: ethers.Contract
+  factoryContract: ethers.Contract
   isModuleEnabled: boolean
-  // account?: any
-  // connectSigner: () => void
-  // connectToDefaultNetwork: () => any
 }
 
 export const Web3Context = createContext<Web3ContextType>({
@@ -33,9 +32,8 @@ export const Web3Context = createContext<Web3ContextType>({
   provider: {} as ethers.providers.Web3Provider,
   signer: {} as ethers.providers.JsonRpcSigner,
   safeContract: {} as ethers.Contract,
+  factoryContract: {} as ethers.Contract,
   isModuleEnabled: false
-  // connectSigner: () => { },
-  // connectToDefaultNetwork: () => { }
 })
 
 /**
@@ -54,9 +52,11 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const signer = provider.getSigner()
 
+  const factoryContract = new ethers.Contract(MODULE_FACTORY_CONTRACT_ADDRESS, factoryAbi, signer)
   const safeContract = new ethers.Contract(safe.safeAddress, safeAbi, provider)
 
   useEffect(() => {
+    console.log("using context useffect...")
     const moduleAddress = localStorage.getItem('moduleAddress')
     if (moduleAddress) {
       const moduleContract = new ethers.Contract(moduleAddress, moduleAbi, provider)
@@ -77,9 +77,9 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     }
 
     // TODO remove event
-  })
+  }, [safe])
 
-  const _setIsModuleEnabled = useCallback(async () => {
+  const _setIsModuleEnabled = async () => {
     try {
       const ethAdapter = new EthersAdapter({
         ethers,
@@ -99,7 +99,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     } catch (e) {
       console.error(e)
     }
-  }, [safe])
+  }
 
   return (<Web3Context.Provider value={{
     setAppStatus,
@@ -108,7 +108,8 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     provider,
     signer,
     safeContract,
-    isModuleEnabled
+    isModuleEnabled,
+    factoryContract
   }}>
     {children}
   </Web3Context.Provider>)
