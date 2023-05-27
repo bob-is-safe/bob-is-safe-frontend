@@ -8,10 +8,8 @@ import { Web3Context } from '../context'
 import Chronology from './wizard-app-status/history/Chronology'
 import TransactionSuccess from './wizard-app-status/TransactionSuccess'
 
-
 const Wizard: React.FC = () => {
   const { appStatus, isModuleEnabled } = useContext(Web3Context)
-
 
   switch (appStatus) {
     case AppStatus.TX_PENDING:

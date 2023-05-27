@@ -28,7 +28,7 @@ const Payment = () => {
             {
               to: module,
               value: '0',
-              //TODO change to use singlePrivatePayment function 
+              // TODO change to use singlePrivatePayment function
               data: new ethers.utils.Interface(moduleAbi).encodeFunctionData('paymentInPrivateMode', [
                 safe.safeAddress,
                 ethers.utils.parseUnits(amount, token.decimals),
@@ -47,14 +47,13 @@ const Payment = () => {
     }
   }
 
-    return <div>
+  return <div>
       <br />
       <br />
       <PaymentForm form={form} setZkBobAddress={setZkBobAddress} setTokenIndex={setTokenIndex}
         setAmount={setAmount}
         submitTx={submitTx} TOKEN_OPTIONS={TOKEN_OPTIONS} />
     </div>
- 
 }
 
 export default Payment

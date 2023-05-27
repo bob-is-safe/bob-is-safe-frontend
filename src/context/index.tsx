@@ -56,7 +56,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
   const safeContract = new ethers.Contract(safe.safeAddress, safeAbi, provider)
 
   useEffect(() => {
-    console.log("using context useffect...")
+    console.log('using context useffect...')
     const moduleAddress = localStorage.getItem('moduleAddress')
     if (moduleAddress) {
       const moduleContract = new ethers.Contract(moduleAddress, moduleAbi, provider)

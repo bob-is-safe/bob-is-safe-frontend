@@ -1,7 +1,7 @@
 import { Button, Typography } from 'antd'
 import { useCallback, useContext, useState } from 'react'
 import { ethers } from 'ethers'
-import { AppStatus, BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS,  UNISWAP_ROUTER } from '../../constants'
+import { AppStatus, BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS, UNISWAP_ROUTER } from '../../constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import safeAbi from '../../../contracts-abi/safe-abi.json'
 
@@ -11,7 +11,6 @@ const { Text } = Typography
 const ModuleInstall = () => {
   const { sdk, safe } = useSafeAppsSDK()
   const { provider, factoryContract, setAppStatus } = useContext(Web3Context)
-
 
   const enableZKModule = useCallback(async (moduleAddress: string) => {
     try {
