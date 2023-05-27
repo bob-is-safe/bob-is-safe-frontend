@@ -28,6 +28,7 @@ const Payment = () => {
             {
               to: module,
               value: '0',
+              //TODO change to use singlePrivatePayment function 
               data: new ethers.utils.Interface(moduleAbi).encodeFunctionData('paymentInPrivateMode', [
                 safe.safeAddress,
                 ethers.utils.parseUnits(amount, token.decimals),
