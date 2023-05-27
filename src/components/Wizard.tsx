@@ -1,24 +1,16 @@
-import Safe, { EthersAdapter } from '@safe-global/protocol-kit'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { Typography } from 'antd'
-import { ethers } from 'ethers'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import safeAbi from '../contracts-abi/safe-abi.json'
-import moduleAbi from '../contracts-abi/module-abi.json'
-import {
-  AppStatus
-} from './constants'
+import React, { useContext } from 'react'
+import { AppStatus } from './constants'
 import TransactionPending from './wizard-app-status/TransactionPending'
 import Initial from './wizard-app-status/initial/Initial'
 import { Web3Context } from '../context'
 import Chronology from './wizard-app-status/history/Chronology'
 import TransactionSuccess from './wizard-app-status/TransactionSuccess'
 
-const { Text, Link } = Typography
 
 const Wizard: React.FC = () => {
-  const { safe } = useSafeAppsSDK()
-  const { appStatus, provider, signer, safeContract, isModuleEnabled } = useContext(Web3Context)
+  const { appStatus, isModuleEnabled } = useContext(Web3Context)
 
 
   switch (appStatus) {
@@ -29,7 +21,7 @@ const Wizard: React.FC = () => {
     case AppStatus.HISTORY:
       return <Chronology />
     case AppStatus.TX_SUCCESS:
-      return <TransactionSuccess/>
+      return <TransactionSuccess />
     default:
       return <div>Something went wrong</div>
   }
