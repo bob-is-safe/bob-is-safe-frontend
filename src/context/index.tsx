@@ -77,7 +77,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     }
 
     // TODO remove event
-  }, [safe])
+  })
 
   const _setIsModuleEnabled = async () => {
     try {
