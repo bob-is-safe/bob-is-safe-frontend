@@ -4,7 +4,7 @@ import { ethers } from 'ethers'
 import { BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS, GOERLI, MODULE_FACTORY_CONTRACT_ADDRESS, UNISWAP_ROUTER } from './constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import factoryAbi from '../contracts-abi/factory-abi.json'
-import moduleAbi from '../contracts-abi/module-abi.json'
+import moduleAbi from '../contracts-abi/bob-module-abi.json'
 
 import safeAbi from '../contracts-abi/safe-abi.json'
 
