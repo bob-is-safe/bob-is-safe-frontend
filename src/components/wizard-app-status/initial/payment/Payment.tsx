@@ -2,12 +2,12 @@ import { Form } from 'antd'
 import { useContext, useState } from 'react'
 import { PaymentForm } from './PaymentForm'
 import { ethers } from 'ethers'
-import { AppStatus, BOB_TOKEN_CONTRACT_ADDRESS, TOKEN_OPTIONS } from '../../constants'
+import { AppStatus, BOB_TOKEN_CONTRACT_ADDRESS, TOKEN_OPTIONS } from '../../../constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
-import moduleAbi from '../../../contracts-abi/module-abi.json'
+import moduleAbi from '../../../../contracts-abi/module-abi.json'
 
-import { removeZkbobNetworkPrefix } from '../../utils'
-import { Web3Context } from '../../../context'
+import { removeZkbobNetworkPrefix } from '../../../utils'
+import { Web3Context } from '../../../../context'
 
 const Payment = () => {
   const [form] = Form.useForm()
