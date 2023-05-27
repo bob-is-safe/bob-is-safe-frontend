@@ -4,24 +4,36 @@ import { ethers } from 'ethers'
 import { BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS, GOERLI, MODULE_FACTORY_CONTRACT_ADDRESS, UNISWAP_ROUTER } from './constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import factoryAbi from '../contracts-abi/factory-abi.json'
+import moduleAbi from '../contracts-abi/module-abi.json'
+
+import safeAbi from '../contracts-abi/safe-abi.json'
+
 import { AppStatus } from '../components/constants'
 import React from 'react'
+import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
 
 interface Web3ContextType {
+  setAppStatus: Dispatch<any>
+  setIsModuleEnabled: Dispatch<any>
   appStatus: AppStatus
-  setStatus: Dispatch<any>
-  // provider?: ethers.providers.Web3Provider
-  // signer?: ethers.providers.JsonRpcSigner
+  provider: ethers.providers.Web3Provider
+  signer: ethers.providers.JsonRpcSigner
+  safeContract: ethers.Contract
+  isModuleEnabled: boolean
   // account?: any
   // connectSigner: () => void
   // connectToDefaultNetwork: () => any
 }
 
 export const Web3Context = createContext<Web3ContextType>({
+  setAppStatus: () => { },
+  setIsModuleEnabled: () => { },
+
   appStatus: AppStatus.INITIAL,
-  setStatus: () => {}
-  // provider: {} as ethers.providers.Web3Provider,
-  // signer: {} as ethers.providers.JsonRpcSigner,
+  provider: {} as ethers.providers.Web3Provider,
+  signer: {} as ethers.providers.JsonRpcSigner,
+  safeContract: {} as ethers.Contract,
+  isModuleEnabled: false
   // connectSigner: () => { },
   // connectToDefaultNetwork: () => { }
 })
@@ -35,95 +47,68 @@ export const Web3Context = createContext<Web3ContextType>({
  */
 export const Web3Provider = ({ children }: { children: ReactNode }) => {
   const { sdk, safe, connected } = useSafeAppsSDK()
-  const [status, setStatus] = useState<any>(AppStatus.INITIAL)
+  const [appStatus, setAppStatus] = useState<any>(AppStatus.INITIAL)
+  const [isModuleEnabled, setIsModuleEnabled] = useState<boolean>(false)
 
+  // TODO make a function detect provider to see if a web3 provider is there or not
   const provider = new ethers.providers.Web3Provider(window.ethereum)
   const signer = provider.getSigner()
 
+  const safeContract = new ethers.Contract(safe.safeAddress, safeAbi, provider)
 
-  // const provider: any = useRef(undefined)
-  //  const signer: any = useRef(undefined)
+  useEffect(() => {
+    const moduleAddress = localStorage.getItem('moduleAddress')
+    if (moduleAddress) {
+      const moduleContract = new ethers.Contract(moduleAddress, moduleAbi, provider)
+      const moduleContractFilters = moduleContract.filters.DepositSuccess()
+      moduleContract.on(moduleContractFilters, () => {
+        setAppStatus(AppStatus.TX_SUCCESS)
+      })
+    }
 
-  // const [_account, _setAccount] = useState<any>()
-  // const [_signer, _setSigner] = useState<any>()
+    const safeContractFilters = safeContract.filters.EnabledModule()
+    safeContract.on(safeContractFilters, () => {
+      setIsModuleEnabled(true)
+      setAppStatus(AppStatus.INITIAL)
+    })
 
-  // useEffect(() => {
-  //   // setSigner(acc)
-  //   checkWindowEthereum()
+    if (!isModuleEnabled) {
+      _setIsModuleEnabled()
+    }
 
-  //   // setting account
-  //   checkAccountAndSigner()
+    // TODO remove event
+  })
 
-  //   // subscribing to wallet events:
-  //   window.ethereum.on('accountsChanged', handleAccountChange)
-  //   return () => {
-  //     provider?.current?.removeListener('accountsChanged', handleAccountChange)
-  //   }
-  // }, [_account, signer])
-
-  // const checkWindowEthereum = () => {
-  //   if (!window.ethereum) { alert('MetaMask not installed; using read-only defaults') } else {
-  //     provider.current = new ethers.providers.Web3Provider(window.ethereum)
-  //   }
-  // }
-
-  // const checkAccountAndSigner = () => {
-  //   if (!localStorage.getItem('account')) {
-  //     connectSigner()
-  //   } else {
-  //     _setAccount(localStorage.getItem('account'))
-  //     getSigner()
-  //   }
-  // }
-
-  // const getSigner = async () => {
-  //   try {
-  //     signer.current = await provider.current.getSigner()
-  //     _setSigner(signer.current)
-  //     console.log('new singre', signer.current)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  // const connectSigner = async () => {
-  //   try {
-  //     const accs = await provider?.current.send('eth_requestAccounts', [])
-  //     localStorage.setItem('account', accs[0])
-  //     _setAccount(accs[0])
-  //     await connectToDefaultNetwork()
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  // const connectToDefaultNetwork = async () => {
-  //   try {
-  //     const x = await window.ethereum.request({
-  //       method: 'wallet_addEthereumChain',
-  //       params: [GOERLI]
-  //     })
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
-  // const handleAccountChange = (accounts: string[]) => {
-  //   const acc: string = accounts[0]
-  //   localStorage.setItem('account', acc)
-  //   _setAccount(acc)
-  //   getSigner()
-  //   console.log('account is changed')
-  // }
+  const _setIsModuleEnabled = useCallback(async () => {
+    try {
+      const ethAdapter = new EthersAdapter({
+        ethers,
+        signerOrProvider: new ethers.providers.Web3Provider(window.ethereum)
+      })
+      const safeSDK = await Safe.create({
+        ethAdapter,
+        safeAddress: safe.safeAddress
+      })
+      const module = localStorage.getItem('moduleAddress') // TODO this should be in the logs
+      if (module) {
+        const isEnabled = await safeSDK.isModuleEnabled(module)
+        setIsModuleEnabled(isEnabled)
+      } else {
+        setIsModuleEnabled(false)
+      }
+    } catch (e) {
+      console.error(e)
+    }
+  }, [safe])
 
   return (<Web3Context.Provider value={{
-    appStatus: status,
-    setStatus
-    // account: _account,
-    // provider: provider.current,
-    // signer: signer.current,
-    // connectSigner,
-    // connectToDefaultNetwork
+    setAppStatus,
+    setIsModuleEnabled,
+    appStatus,
+    provider,
+    signer,
+    safeContract,
+    isModuleEnabled
   }}>
     {children}
   </Web3Context.Provider>)

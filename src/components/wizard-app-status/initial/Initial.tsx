@@ -15,7 +15,7 @@ const { Text, Link } = Typography
 const Initial = ({ isModuleEnabled }: any) => {
   const [form] = Form.useForm()
   const { sdk, safe } = useSafeAppsSDK()
-  const { setStatus } = useContext(Web3Context)
+  const { setAppStatus: setStatus } = useContext(Web3Context)
 
   const [zkBobAddress, setZkBobAddress] = useState<string>('')
   const [tokenIndex, setTokenIndex] = useState<number>(0)

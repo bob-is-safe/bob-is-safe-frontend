@@ -5,7 +5,7 @@ import { AppStatus } from '../../constants'
 import TransactionHistory from './TransactionHistory'
 
 const Chronology: React.FC = () => {
-  const { setStatus } = useContext(Web3Context)
+  const { setAppStatus: setStatus } = useContext(Web3Context)
 
   return <div>
     <Button style={{
