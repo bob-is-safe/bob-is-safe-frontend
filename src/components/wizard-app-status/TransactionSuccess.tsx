@@ -7,7 +7,7 @@ import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 
 const TransactionSuccess = ({ isModuleEnabled }: any) => {
   const { safe } = useSafeAppsSDK()
-  const { setStatus } = useContext(Web3Context)
+  const { setAppStatus: setStatus } = useContext(Web3Context)
 
   return <div style={{
     display: 'flex',

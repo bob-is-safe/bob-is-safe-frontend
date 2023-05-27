@@ -8,6 +8,6 @@ module.exports = function (webpackEnv) {
         // 👇️👇️👇️ add this 👇️👇️👇️
         assert: require.resolve('assert')
       }
-    }
+    },
   }
 }
