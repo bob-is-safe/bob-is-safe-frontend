@@ -1,0 +1,465 @@
+[
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_owner",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_workerAccount",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_bobToken",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_bobDepositProtocol",
+    "type": "address"
+   },
+   {
+    "internalType": "address",
+    "name": "_uniRouter02",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "constructor"
+ },
+ {
+  "inputs": [],
+  "name": "PaymentDisabled",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "TooEarly",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "WrongFeesOrTokensArrays",
+  "type": "error"
+ },
+ {
+  "inputs": [],
+  "name": "WrongOutToken",
+  "type": "error"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "name": "BobModuleSetup",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   }
+  ],
+  "name": "ChangedPaymentScheduled",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": false,
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "name": "DepositSuccess",
+  "type": "event"
+ },
+ {
+  "anonymous": false,
+  "inputs": [
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   },
+   {
+    "indexed": false,
+    "internalType": "bytes",
+    "name": "",
+    "type": "bytes"
+   }
+  ],
+  "name": "NewPaymentScheduled",
+  "type": "event"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "index",
+    "type": "bytes32"
+   },
+   {
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "executionTimeInterval",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "paymentToken",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_rawZkAddress",
+    "type": "bytes"
+   },
+   {
+    "internalType": "uint256",
+    "name": "paymentsLeft",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "deactiveScheduledPayment",
+    "type": "uint256"
+   }
+  ],
+  "name": "changeScheduledPayment",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "uint256",
+    "name": "amount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "executionTimeInterval",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "paymentToken",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "payments",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_rawZkAddress",
+    "type": "bytes"
+   }
+  ],
+  "name": "createScheduledPayment",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {"inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "paymentIndex",
+    "type": "bytes32"
+   }
+  ],
+  "name": "executeScheduledPayment",
+  "outputs": [],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "paymentIndex",
+    "type": "bytes32"
+   }
+  ],
+  "name": "getScheduledPayment",
+  "outputs": [
+   {
+    "components": [
+     {
+      "internalType": "uint256",
+      "name": "recurringAmmount",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "executionInterval",
+      "type": "uint256"
+     },
+     {
+      "internalType": "uint256",
+      "name": "nextExecution",
+      "type": "uint256"
+     },
+     {
+      "internalType": "address",
+      "name": "paymentToken",
+      "type": "address"
+     },
+     {
+      "internalType": "bytes",
+      "name": "zkAddress",
+      "type": "bytes"
+     },
+     {
+      "internalType": "uint256",
+      "name": "paymentsLeft",
+      "type": "uint256"
+     },
+     {
+      "internalType": "bool",
+      "name": "active",
+      "type": "bool"
+     }
+    ],
+    "internalType": "struct BobModule.ScheduledPayment",
+    "name": "",
+    "type": "tuple"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "paymentIndex",
+    "type": "bytes32"
+   }
+  ],
+  "name": "isScheduledPaymentActive",
+  "outputs": [
+   {
+    "internalType": "bool",
+    "name": "",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "paymentIndex",
+    "type": "bytes32"
+   }
+  ],
+  "name": "nextScheduledPayment",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "bytes32",
+    "name": "",
+    "type": "bytes32"
+   }
+  ],
+  "name": "scheduledPayments",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "recurringAmmount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "executionInterval",
+    "type": "uint256"
+   },
+   {
+    "internalType": "uint256",
+    "name": "nextExecution",
+    "type": "uint256"
+   },
+   {
+    "internalType": "address",
+    "name": "paymentToken",
+    "type": "address"
+   },
+   {
+    "internalType": "bytes",
+    "name": "zkAddress",
+    "type": "bytes"
+   },
+   {
+    "internalType": "uint256",
+    "name": "paymentsLeft",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bool",
+    "name": "active",
+    "type": "bool"
+   }
+  ],
+  "stateMutability": "view",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "newWorker",
+    "type": "address"
+   }
+  ],
+  "name": "setNewWorkerAddress",
+  "outputs": [
+   {
+    "internalType": "address",
+    "name": "",
+    "type": "address"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ },
+ {
+  "inputs": [
+   {
+    "internalType": "address",
+    "name": "_fallbackUser",
+    "type": "address"
+   },
+   {
+    "internalType": "uint256",
+    "name": "_amount",
+    "type": "uint256"
+   },
+   {
+    "internalType": "bytes",
+    "name": "_rawZkAddress",
+    "type": "bytes"
+   },
+   {
+    "internalType": "address[]",
+    "name": "tokens",
+    "type": "address[]"
+   },
+   {
+    "internalType": "uint24[]",
+    "name": "fees",
+    "type": "uint24[]"
+   },
+   {
+    "internalType": "uint256",
+    "name": "amountOutMin",
+    "type": "uint256"
+   }
+  ],
+  "name": "singlePrivatePayment",
+  "outputs": [
+   {
+    "internalType": "uint256",
+    "name": "",
+    "type": "uint256"
+   }
+  ],
+  "stateMutability": "nonpayable",
+  "type": "function"
+ }
+]

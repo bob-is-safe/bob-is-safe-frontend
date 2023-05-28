@@ -1,7 +1,7 @@
 import { Button, Typography } from 'antd'
 import { useCallback, useContext, useState } from 'react'
 import { ethers } from 'ethers'
-import { AppStatus, BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS, UNISWAP_ROUTER } from '../../constants'
+import { AppStatus, BOB_DEPOSIT_PROTOCOL, BOB_MODULE_HARDCODED, BOB_TOKEN_CONTRACT_ADDRESS, UNISWAP_ROUTER } from '../../constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import safeAbi from '../../../contracts-abi/safe-abi.json'
 
@@ -12,23 +12,27 @@ const ModuleInstall = () => {
   const { sdk, safe } = useSafeAppsSDK()
   const { provider, factoryContract, setAppStatus } = useContext(Web3Context)
 
-  const enableZKModule = useCallback(async (moduleAddress: string) => {
+  // all this logic should change once we have factory
+  const enableZKModule = async () => {
+    setAppStatus(AppStatus.TX_PENDING)
+    // const enableZKModule = useCallback(async (moduleAddress: string) => {
     try {
       const { safeTxHash } = await sdk.txs.send({
         txs: [
           {
             to: safe.safeAddress,
             value: '0',
-            data: new ethers.utils.Interface(safeAbi).encodeFunctionData('enableModule', [moduleAddress])
+            data: new ethers.utils.Interface(safeAbi).encodeFunctionData('enableModule', [BOB_MODULE_HARDCODED])
           }
         ]
       })
       console.log({ safeTxHash })
+      localStorage.setItem('moduleAddress', BOB_MODULE_HARDCODED)
     } catch (e) {
       console.error(e)
-      setAppStatus('initial')
+      setAppStatus(AppStatus.INITIAL)
     }
-  }, [safe.safeAddress, sdk.txs])
+  }
 
   const _deployModule = useCallback(async () => {
     setAppStatus(AppStatus.TX_PENDING)
@@ -38,7 +42,8 @@ const ModuleInstall = () => {
     const factoryContractFilters = factoryContract.filters.ModuleProxyCreation()
     factoryContract.on(factoryContractFilters, (address, y) => {
       localStorage.setItem('moduleAddress', address)
-      enableZKModule(address)
+      enableZKModule()
+      // enableZKModule(address)
     })
 
     const deployModule = await factoryContract.createModule(
@@ -78,7 +83,8 @@ const ModuleInstall = () => {
         marginTop: '12px',
         marginBottom: '0px !important'
       }}
-      onClick={_deployModule}
+      // onClick={_deployModule}
+      onClick={async () => { await enableZKModule() }}
     >
       <Text style={{ fontSize: '16px', color: 'white' }}>Enable module</Text>
     </Button>

@@ -4,11 +4,11 @@ import { ethers } from 'ethers'
 import { BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS, GOERLI, MODULE_FACTORY_CONTRACT_ADDRESS, UNISWAP_ROUTER } from './constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import factoryAbi from '../contracts-abi/factory-abi.json'
-import moduleAbi from '../contracts-abi/module-abi.json'
+import moduleAbi from '../contracts-abi/bob-module-abi.json'
 
 import safeAbi from '../contracts-abi/safe-abi.json'
 
-import { AppStatus } from '../components/constants'
+import { AppStatus, BOB_MODULE_HARDCODED } from '../components/constants'
 import React from 'react'
 import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
 
@@ -53,18 +53,27 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
   const signer = provider.getSigner()
 
   const factoryContract = new ethers.Contract(MODULE_FACTORY_CONTRACT_ADDRESS, factoryAbi, signer)
+
   const safeContract = new ethers.Contract(safe.safeAddress, safeAbi, provider)
 
+  // TODO initialize with factory
+  const bobModule = new ethers.Contract(BOB_MODULE_HARDCODED, moduleAbi, provider)
+
   useEffect(() => {
-    console.log('using context useffect...')
-    const moduleAddress = localStorage.getItem('moduleAddress')
-    if (moduleAddress) {
-      const moduleContract = new ethers.Contract(moduleAddress, moduleAbi, provider)
-      const moduleContractFilters = moduleContract.filters.DepositSuccess()
-      moduleContract.on(moduleContractFilters, () => {
-        setAppStatus(AppStatus.TX_SUCCESS)
-      })
-    }
+    // console.log('using context useffect...')
+    // const moduleAddress = localStorage.getItem('moduleAddress')
+    // if (moduleAddress) {
+    //   const moduleContract = new ethers.Contract(moduleAddress, moduleAbi, provider)
+    //   const moduleContractFilters = moduleContract.filters.DepositSuccess()
+    //   moduleContract.on(moduleContractFilters, () => {
+    //     setAppStatus(AppStatus.TX_SUCCESS)
+    //   })
+    // }
+    console.log('bobModule', bobModule)
+    const moduleContractFilters = bobModule.filters.DepositSuccess()
+    bobModule.on(moduleContractFilters, () => {
+      setAppStatus(AppStatus.TX_SUCCESS)
+    })
 
     const safeContractFilters = safeContract.filters.EnabledModule()
     safeContract.on(safeContractFilters, () => {
@@ -89,9 +98,10 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         ethAdapter,
         safeAddress: safe.safeAddress
       })
-      const module = localStorage.getItem('moduleAddress') // TODO this should be in the logs
-      if (module) {
-        const isEnabled = await safeSDK.isModuleEnabled(module)
+      // const module = localStorage.getItem('moduleAddress') // TODO this should be in the logs
+      const isEnabled = await safeSDK.isModuleEnabled(BOB_MODULE_HARDCODED)
+      if (isEnabled) {
+        // console.log("is enabled?", isEnabled)
         setIsModuleEnabled(isEnabled)
       } else {
         setIsModuleEnabled(false)
