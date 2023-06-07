@@ -3,6 +3,7 @@ export enum AppStatus {
   TX_PENDING = 'txPending',
   HISTORY = 'history',
   TX_SUCCESS = 'txSuccess',
+  LOADING = 'loading' //TODO if status is loading show the loadspinner
 }
 
 export interface Token {
@@ -16,13 +17,12 @@ export interface Token {
   height?: number
 }
 
-export const BOB_MODULE_HARDCODED = '0x86fa231195dA74FD72b55B918EED8e26C2182E7c'
-export const ZKBOB_ADDRESS_PREFIX_REGEX = /^zkbob_[A-Za-z\d]+:/
+export const MASTER_COPY_ADDRESS = '0xA665E271c3b8865A210985421FEBaE5fEaa1b0E5'
+
 export const BOB_TOKEN_CONTRACT_ADDRESS = '0x97a4ab97028466FE67F18A6cd67559BAABE391b8'
-export const MODULE_FACTORY_CONTRACT_ADDRESS = '0x9E1B59bcD7A225beb924aFA4Cad451e28661d864'
+export const MODULE_FACTORY_CONTRACT_ADDRESS = '0xB975b5EDa87612715D84d883Fa53cA261Fcb2538'
 export const BOB_DEPOSIT_PROTOCOL = '0xE4C77B7787cC116A5E1549c5BB36DE07732100Bb'
 export const UNISWAP_ROUTER = '0xE592427A0AEce92De3Edee1F18E0157C05861564'
-const x = 'foo'
 export const TOKEN_OPTIONS: Token[] = [
   {
     // BOB
