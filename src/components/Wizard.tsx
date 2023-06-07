@@ -1,7 +1,7 @@
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import { Typography } from 'antd'
 import React, { useContext } from 'react'
-import { AppStatus } from './constants'
+import { AppStatus } from '../constants'
 import TransactionPending from './wizard-app-status/TransactionPending'
 import Initial from './wizard-app-status/initial/Initial'
 import { Web3Context } from '../context'
