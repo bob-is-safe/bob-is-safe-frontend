@@ -6,7 +6,7 @@ import { AppStatus, BOB_TOKEN_CONTRACT_ADDRESS, TOKEN_OPTIONS } from '../../../.
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import moduleAbi from '../../../../contracts-abi/bob-module-abi.json'
 
-import { formatZkBobAddressBytes } from '../../../../utils'
+import { createRandomTag, formatZkBobAddressBytes } from '../../../../utils'
 import { Web3Context } from '../../../../context'
 
 const Payment = () => {
@@ -44,7 +44,8 @@ const Payment = () => {
                 formatZkBobAddressBytes(zkBobAddress), // bytes memory _rawZkAddress, --> TODO make this in bytes
                 token.address === BOB_TOKEN_CONTRACT_ADDRESS ? [] : [token.address, ...token.swapAddresses], // address[] memory tokens,
                 token.address === BOB_TOKEN_CONTRACT_ADDRESS ? [] : token.swapFees, // uint24[] memory fees,
-                0 // uint256 amountOutMin
+                0, // uint256 amountOutMin
+                createRandomTag()
               ])
             }
           ]

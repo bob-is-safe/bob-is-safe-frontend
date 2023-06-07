@@ -10,6 +10,12 @@ export const formatZkBobAddressBytes = (zkBobAddress: string): string => {
   return zkAddrBytes
 }
 
+export const createRandomTag = () => {
+  const tag = `0x${Buffer.from(bs58.decode("")).toString('hex')}`
+  return ethers.constants.HashZero  //JUST FOR NOW!!
+}
+
+
 // pre compute from gnosis module factory
 //TODO understand what is inside byteCode
 export const calculateProxyAddress = (
