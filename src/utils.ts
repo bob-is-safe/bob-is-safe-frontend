@@ -55,3 +55,16 @@ export const createInitData = (
   ])
   return initData
 }
+
+
+export const generateSaltNonce = (length: number) => {
+  const charset = '0123456789ABCDEF';
+  let saltNonce = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    saltNonce += charset[randomIndex];
+  }
+
+  return `0x${saltNonce}`;
+}
