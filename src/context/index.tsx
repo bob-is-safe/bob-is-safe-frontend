@@ -10,6 +10,7 @@ import safeAbi from '../contracts-abi/safe-abi.json'
 
 import { AppStatus } from '../constants'
 import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
+import { test1inch } from '../swap'
 
 interface Web3ContextType {
   setAppStatus: Dispatch<any>
@@ -84,6 +85,7 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
 
   //TOFIX events not emitted
   useEffect(() => {
+    test1inch()
     if (bobModuleAddress) {
       const bobModule = new ethers.Contract(bobModuleAddress, moduleAbi, provider)
       console.log('inside inside module useffect', bobModule)
