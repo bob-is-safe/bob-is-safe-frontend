@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import { createContext, type ReactNode, useEffect, useRef, useState, useCallback, type Dispatch } from 'react'
+import { createContext, type ReactNode, useEffect, useState, type Dispatch } from 'react'
 import { ethers } from 'ethers'
-import { BOB_DEPOSIT_PROTOCOL, BOB_TOKEN_CONTRACT_ADDRESS, GOERLI, MODULE_FACTORY_CONTRACT_ADDRESS, UNISWAP_ROUTER } from './constants'
+import { MODULE_FACTORY_CONTRACT_ADDRESS } from './constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import factoryAbi from '../contracts-abi/factory-abi.json'
 import moduleAbi from '../contracts-abi/bob-module-abi.json'
@@ -10,7 +10,7 @@ import safeAbi from '../contracts-abi/safe-abi.json'
 
 import { AppStatus, BOB_MODULE_HARDCODED } from '../components/constants'
 import React from 'react'
-import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
+import Safe, { EthersAdapter } from '@safe-global/protocol-kit'
 
 interface Web3ContextType {
   setAppStatus: Dispatch<any>
@@ -25,15 +25,15 @@ interface Web3ContextType {
 }
 
 export const Web3Context = createContext<Web3ContextType>({
-  setAppStatus: () => { },
-  setIsModuleEnabled: () => { },
+  setAppStatus: () => {},
+  setIsModuleEnabled: () => {},
 
   appStatus: AppStatus.INITIAL,
   provider: {} as ethers.providers.Web3Provider,
   signer: {} as ethers.providers.JsonRpcSigner,
   safeContract: {} as ethers.Contract,
   factoryContract: {} as ethers.Contract,
-  isModuleEnabled: false
+  isModuleEnabled: false,
 })
 
 /**
@@ -44,7 +44,7 @@ export const Web3Context = createContext<Web3ContextType>({
  * @todo provide the function retrieve the tx history
  */
 export const Web3Provider = ({ children }: { children: ReactNode }) => {
-  const { sdk, safe, connected } = useSafeAppsSDK()
+  const { safe } = useSafeAppsSDK()
   const [appStatus, setAppStatus] = useState<any>(AppStatus.INITIAL)
   const [isModuleEnabled, setIsModuleEnabled] = useState<boolean>(false)
 
@@ -92,11 +92,11 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     try {
       const ethAdapter = new EthersAdapter({
         ethers,
-        signerOrProvider: new ethers.providers.Web3Provider(window.ethereum)
+        signerOrProvider: new ethers.providers.Web3Provider(window.ethereum),
       })
       const safeSDK = await Safe.create({
         ethAdapter,
-        safeAddress: safe.safeAddress
+        safeAddress: safe.safeAddress,
       })
       // const module = localStorage.getItem('moduleAddress') // TODO this should be in the logs
       const isEnabled = await safeSDK.isModuleEnabled(BOB_MODULE_HARDCODED)
@@ -111,18 +111,22 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  return (<Web3Context.Provider value={{
-    setAppStatus,
-    setIsModuleEnabled,
-    appStatus,
-    provider,
-    signer,
-    safeContract,
-    isModuleEnabled,
-    factoryContract
-  }}>
-    {children}
-  </Web3Context.Provider>)
+  return (
+    <Web3Context.Provider
+      value={{
+        setAppStatus,
+        setIsModuleEnabled,
+        appStatus,
+        provider,
+        signer,
+        safeContract,
+        isModuleEnabled,
+        factoryContract,
+      }}
+    >
+      {children}
+    </Web3Context.Provider>
+  )
 }
 
 export const Web3Consumer = Web3Context.Consumer

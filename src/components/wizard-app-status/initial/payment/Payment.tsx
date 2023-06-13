@@ -33,7 +33,7 @@ const Payment = () => {
       const module = localStorage.getItem('moduleAddress')
       if (module) {
         const token = TOKEN_OPTIONS[tokenIndex]
-        const { safeTxHash } = await sdk.txs.send({
+        await sdk.txs.send({
           txs: [
             {
               to: BOB_MODULE_HARDCODED,

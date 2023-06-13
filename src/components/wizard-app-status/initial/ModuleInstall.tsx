@@ -1,5 +1,5 @@
 import { Button, Typography } from 'antd'
-import { useCallback, useContext, useState } from 'react'
+import { useCallback, useContext } from 'react'
 import { ethers } from 'ethers'
 import { AppStatus, BOB_DEPOSIT_PROTOCOL, BOB_MODULE_HARDCODED, BOB_TOKEN_CONTRACT_ADDRESS, UNISWAP_ROUTER } from '../../constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
@@ -34,7 +34,7 @@ const ModuleInstall = () => {
     }
   }
 
-  const _deployModule = useCallback(async () => {
+  useCallback(async () => {
     setAppStatus(AppStatus.TX_PENDING)
 
     await provider.send('eth_requestAccounts', []) // <- this promps user to connect metamask
