@@ -1,7 +1,7 @@
 import { Image, Button } from 'antd'
 import React, { useContext } from 'react'
 import { Web3Context } from '../../context'
-import { AppStatus } from '../constants'
+import { AppStatus } from '../../constants'
 import { Link } from '@material-ui/core'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 
