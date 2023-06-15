@@ -2,17 +2,17 @@ import { Form } from 'antd'
 import { useContext, useState } from 'react'
 import { PaymentForm } from './PaymentForm'
 import { ethers } from 'ethers'
-import { AppStatus, BOB_MODULE_HARDCODED, BOB_TOKEN_CONTRACT_ADDRESS, TOKEN_OPTIONS } from '../../../constants'
+import { AppStatus, BOB_TOKEN_CONTRACT_ADDRESS, TOKEN_OPTIONS } from '../../../../constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import moduleAbi from '../../../../contracts-abi/bob-module-abi.json'
 
-import { formatZkBobAddressBytes } from '../../../utils'
+import { createRandomTag, formatZkBobAddressBytes } from '../../../../utils'
 import { Web3Context } from '../../../../context'
 
 const Payment = () => {
   const [form] = Form.useForm()
   const { sdk, safe } = useSafeAppsSDK()
-  const { setAppStatus } = useContext(Web3Context)
+  const { bobModuleAddress, setAppStatus } = useContext(Web3Context)
 
   const [zkBobAddress, setZkBobAddress] = useState<string>('')
   const [tokenIndex, setTokenIndex] = useState<number>(0)
@@ -30,23 +30,21 @@ const Payment = () => {
    */
   const submitTx = async () => {
     try {
-      const module = localStorage.getItem('moduleAddress')
-      if (module) {
+      if (bobModuleAddress) {
         const token = TOKEN_OPTIONS[tokenIndex]
         await sdk.txs.send({
           txs: [
             {
-              to: BOB_MODULE_HARDCODED,
+              to: bobModuleAddress,
               value: '0',
-              // TODO change to use singlePrivatePayment function
               data: new ethers.utils.Interface(moduleAbi).encodeFunctionData('singlePrivatePayment', [
                 safe.safeAddress, // address _fallbackUser,
                 ethers.utils.parseUnits(amount, token.decimals), // uint256 _amount,
-                // removeZkbobNetworkPrefix(zkBobAddress), // bytes memory _rawZkAddress, --> TODO make this in bytes
                 formatZkBobAddressBytes(zkBobAddress), // bytes memory _rawZkAddress, --> TODO make this in bytes
                 token.address === BOB_TOKEN_CONTRACT_ADDRESS ? [] : [token.address, ...token.swapAddresses], // address[] memory tokens,
                 token.address === BOB_TOKEN_CONTRACT_ADDRESS ? [] : token.swapFees, // uint24[] memory fees,
-                0 // uint256 amountOutMin
+                0, // uint256 amountOutMin
+                createRandomTag()
               ])
             }
           ]

@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { AppStatus } from './constants'
+import { AppStatus } from '../constants'
 import TransactionPending from './wizard-app-status/TransactionPending'
 import Initial from './wizard-app-status/initial/Initial'
 import { Web3Context } from '../context'

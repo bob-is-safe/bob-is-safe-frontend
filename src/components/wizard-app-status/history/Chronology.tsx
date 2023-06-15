@@ -1,7 +1,7 @@
 import { Button } from 'antd'
 import React, { useContext } from 'react'
 import { Web3Context } from '../../../context'
-import { AppStatus } from '../../constants'
+import { AppStatus } from '../../../constants'
 import TransactionHistory from './TransactionHistory'
 
 const Chronology: React.FC = () => {

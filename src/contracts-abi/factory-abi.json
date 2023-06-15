@@ -1,59 +1,50 @@
 [
     {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "address",
-                "name": "",
-                "type": "address"
-            }
-        ],
-        "name": "ModuleProxyCreation",
-        "type": "event"
-    },
-    {
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_owner",
+                "name": "masterCopy",
                 "type": "address"
             },
             {
-                "internalType": "address",
-                "name": "_avatar",
-                "type": "address"
+                "internalType": "bytes",
+                "name": "initializer",
+                "type": "bytes"
             },
             {
-                "internalType": "address",
-                "name": "_target",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_bobToken",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_bobDepositProtocol",
-                "type": "address"
-            },
-            {
-                "internalType": "address",
-                "name": "_uniRouter",
-                "type": "address"
+                "internalType": "uint256",
+                "name": "saltNonce",
+                "type": "uint256"
             }
         ],
-        "name": "createModule",
+        "name": "deployModule",
         "outputs": [
             {
                 "internalType": "address",
-                "name": "",
+                "name": "proxy",
                 "type": "address"
             }
         ],
         "stateMutability": "nonpayable",
         "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "proxy",
+                "type": "address"
+            },
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "safe",
+                "type": "address"
+            }
+        ],
+        "name": "ModuleProxyCreation",
+        "type": "event"
     }
 ]
