@@ -23,7 +23,6 @@ export const getZkBobClient = async (activePoolAlias: ZkBobPoolAlias): Promise<Z
 
 export const zkBobLogin = async (client: ZkBobClient, signedMessage: string, activePoolAlias: ZkBobPoolAlias) => {
   const mnemonic = ethers.utils.entropyToMnemonic(hexToBuf(signedMessage))
-
   const accountConfig: AccountConfig = {
     // spending key is a byte array which derived from mnemonic
     sk: deriveSpendingKeyZkBob(mnemonic),

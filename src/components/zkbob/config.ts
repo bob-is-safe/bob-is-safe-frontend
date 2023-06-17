@@ -44,4 +44,5 @@ export const zkBobConfig: ClientConfig = {
       rpcUrls: ['https://goerli.optimism.io'],
     },
   },
+  supportId: 'unique_string_generated_with_uuidv4', // @TODO: replace with your own support id
 }

@@ -67,3 +67,6 @@ export const TOKEN_OPTIONS: Token[] = [
     swapFees: [3000, 100, 500],
   },
 ]
+
+// 3 days in ms
+export const SIGNED_MESSAGE_EXPIRATION_TIME_MS = 60 * 60 * 24 * 3 * 1000
