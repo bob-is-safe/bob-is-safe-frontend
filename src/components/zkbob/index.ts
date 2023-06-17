@@ -22,11 +22,8 @@ export const getZkBobClient = async (activePoolAlias: ZkBobPoolAlias): Promise<Z
 }
 
 export const zkBobLogin = async (client: ZkBobClient, signedMessage: string, activePoolAlias: ZkBobPoolAlias) => {
-  const mnemonic = ethers.utils.entropyToMnemonic(
-    hexToBuf('9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08'),
-  )
+  const mnemonic = ethers.utils.entropyToMnemonic(hexToBuf(signedMessage))
 
-  console.log('Mnemonic: ' + mnemonic)
   const accountConfig: AccountConfig = {
     // spending key is a byte array which derived from mnemonic
     sk: deriveSpendingKeyZkBob(mnemonic),
@@ -38,13 +35,9 @@ export const zkBobLogin = async (client: ZkBobClient, signedMessage: string, act
     // using local prover
     proverMode: ProverMode.Local,
   }
-  console.log('Login with account config: ' + JSON.stringify(accountConfig))
   await client.login(accountConfig)
-  console.log('Logged in')
 }
 
 export const genShieldedAddress = async (client: ZkBobClient): Promise<string> => {
-  const address = await client.generateAddress()
-  console.log('Generated address: ' + address)
-  return address
+  return await client.generateAddress()
 }

@@ -1,4 +1,4 @@
-import { Button, Form } from 'antd'
+import { Form } from 'antd'
 import React, { useContext, useState } from 'react'
 import { PaymentForm } from './PaymentForm'
 import { ethers } from 'ethers'
@@ -8,7 +8,6 @@ import moduleAbi from '../../../../contracts-abi/bob-module-abi.json'
 
 import { createRandomTag, formatZkBobAddressBytes } from '../../../../utils'
 import { Web3Context } from '../../../../context'
-import { getZkBobClient, zkBobLogin, ZkBobPoolAlias } from '../../../zkbob'
 
 const Payment = () => {
   const [form] = Form.useForm()
@@ -69,39 +68,6 @@ const Payment = () => {
         submitTx={submitTx}
         TOKEN_OPTIONS={TOKEN_OPTIONS}
       />
-      <Button
-        className="gradient-button"
-        htmlType="submit"
-        onClick={async () => {
-          const client = await getZkBobClient(ZkBobPoolAlias.BOB_GOERLI)
-          const signedMessage: { messageHash: string } = (await sdk.txs.signMessage('random message')) as {
-            messageHash: string
-          }
-          await zkBobLogin(client, signedMessage?.messageHash, ZkBobPoolAlias.BOB_GOERLI)
-
-          console.log('Logged')
-          console.log(client)
-          console.log('HERE', client.networkName())
-          const address = await client.generateAddress()
-          setZkBobAddress(address)
-        }}
-        style={{
-          background: 'linear-gradient(to right, #ffbb33, #f7a10c)',
-          color: 'white',
-          fontWeight: 'bold',
-          border: 'none',
-          fontSize: '16px',
-          textTransform: 'uppercase',
-          borderRadius: '8px',
-          boxShadow: '0 2px 6px rgba(0, 0, 0, 0.1)',
-          width: '360px',
-          height: '48px',
-          marginTop: '12px',
-          marginBottom: '0px !important',
-        }}
-      >
-        Generate Address
-      </Button>
     </div>
   )
 }
