@@ -25,6 +25,10 @@ input {
     background: linear-gradient(to right, #ffd480, #f9b43e) !important;
 }
 
+.gradient-button-blue:hover {
+    background: #1f294d !important;
+}
+
 .testo-bellissimo {
     text-align: center;
     max-width: 360px;

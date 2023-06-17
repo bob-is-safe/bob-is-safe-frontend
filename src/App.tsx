@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import 'antd/dist/reset.css'
 import { Image } from 'antd'
 import Wizard from './components/Wizard'
+import Navbar from './components/navbar/Navbar'
 
 const Container = styled.div`
   padding: 1rem;
@@ -17,10 +18,11 @@ const Container = styled.div`
 
 const SafeApp = (): React.ReactElement => {
   return (
-        <Container>
-                <Image width={400} height={200} src="/bob-is-safe.png" preview={false}/>
-            <Wizard/>
-        </Container>
+    <Container>
+      <Navbar />
+      <Image width={400} height={200} src="/bob-is-safe.png" preview={false} />
+      <Wizard />
+    </Container>
   )
 }
 

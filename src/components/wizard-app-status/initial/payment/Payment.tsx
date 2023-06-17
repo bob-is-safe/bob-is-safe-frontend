@@ -1,5 +1,5 @@
 import { Form } from 'antd'
-import { useContext, useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { PaymentForm } from './PaymentForm'
 import { ethers } from 'ethers'
 import { AppStatus, BOB_TOKEN_CONTRACT_ADDRESS, TOKEN_OPTIONS } from '../../../../constants'
@@ -19,15 +19,15 @@ const Payment = () => {
   const [amount, setAmount] = useState<string>('')
 
   /**
-   * function singlePrivatePayment(
-          address _fallbackUser,
-          uint256 _amount,
-          bytes memory _rawZkAddress,
-          address[] memory tokens,
-          uint24[] memory fees,
-          uint256 amountOutMin
-          )
-   */
+     * function singlePrivatePayment(
+     address _fallbackUser,
+     uint256 _amount,
+     bytes memory _rawZkAddress,
+     address[] memory tokens,
+     uint24[] memory fees,
+     uint256 amountOutMin
+     )
+     */
   const submitTx = async () => {
     try {
       if (bobModuleAddress) {
@@ -44,10 +44,10 @@ const Payment = () => {
                 token.address === BOB_TOKEN_CONTRACT_ADDRESS ? [] : [token.address, ...token.swapAddresses], // address[] memory tokens,
                 token.address === BOB_TOKEN_CONTRACT_ADDRESS ? [] : token.swapFees, // uint24[] memory fees,
                 0, // uint256 amountOutMin
-                createRandomTag()
-              ])
-            }
-          ]
+                createRandomTag(),
+              ]),
+            },
+          ],
         })
         setAppStatus(AppStatus.TX_PENDING)
       }
@@ -56,13 +56,20 @@ const Payment = () => {
     }
   }
 
-  return <div>
-    <br />
-    <br />
-    <PaymentForm form={form} setZkBobAddress={setZkBobAddress} setTokenIndex={setTokenIndex}
-      setAmount={setAmount}
-      submitTx={submitTx} TOKEN_OPTIONS={TOKEN_OPTIONS} />
-  </div>
+  return (
+    <div>
+      <br />
+      <br />
+      <PaymentForm
+        form={form}
+        setZkBobAddress={setZkBobAddress}
+        setTokenIndex={setTokenIndex}
+        setAmount={setAmount}
+        submitTx={submitTx}
+        TOKEN_OPTIONS={TOKEN_OPTIONS}
+      />
+    </div>
+  )
 }
 
 export default Payment
