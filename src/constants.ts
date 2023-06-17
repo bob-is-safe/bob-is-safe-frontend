@@ -3,7 +3,7 @@ export enum AppStatus {
   TX_PENDING = 'txPending',
   HISTORY = 'history',
   TX_SUCCESS = 'txSuccess',
-  LOADING = 'loading' //TODO if status is loading show the loadspinner
+  LOADING = 'loading', // @TODO if status is loading show the loadspinner
 }
 
 export interface Token {
@@ -31,7 +31,7 @@ export const TOKEN_OPTIONS: Token[] = [
     symbol: 'BOB',
     icon: '/coin-logo/bob-logo.png',
     swapAddresses: [],
-    swapFees: []
+    swapFees: [],
   },
   {
     // USDC
@@ -40,7 +40,7 @@ export const TOKEN_OPTIONS: Token[] = [
     symbol: 'USDC',
     icon: '/coin-logo/usdc-logo.png',
     swapFees: [500],
-    swapAddresses: ['0x97a4ab97028466FE67F18A6cd67559BAABE391b8']
+    swapAddresses: ['0x97a4ab97028466FE67F18A6cd67559BAABE391b8'],
   },
   {
     address: '0xcbe9771ed31e761b744d3cb9ef78a1f32dd99211',
@@ -51,8 +51,8 @@ export const TOKEN_OPTIONS: Token[] = [
     swapAddresses: [
       '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
       '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-      '0x97a4ab97028466FE67F18A6cd67559BAABE391b8'
-    ]
+      '0x97a4ab97028466FE67F18A6cd67559BAABE391b8',
+    ],
   },
   {
     address: '0x328507DC29C95c170B56a1b3A758eB7a9E73455c',
@@ -62,8 +62,8 @@ export const TOKEN_OPTIONS: Token[] = [
     swapAddresses: [
       '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
       '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
-      '0x97a4ab97028466FE67F18A6cd67559BAABE391b8'
+      '0x97a4ab97028466FE67F18A6cd67559BAABE391b8',
     ],
-    swapFees: [3000, 100, 500]
-  }
+    swapFees: [3000, 100, 500],
+  },
 ]

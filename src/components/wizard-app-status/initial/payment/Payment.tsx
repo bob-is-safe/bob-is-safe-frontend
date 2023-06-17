@@ -32,8 +32,7 @@ const Payment = () => {
     try {
       if (bobModuleAddress) {
         const token = TOKEN_OPTIONS[tokenIndex]
-
-        const { safeTxHash } = await sdk.txs.send({
+        await sdk.txs.send({
           txs: [
             {
               to: bobModuleAddress,
