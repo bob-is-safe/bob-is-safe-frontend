@@ -78,6 +78,7 @@ const Payment = () => {
             messageHash: string
           }
           await zkBobLogin(client, signedMessage?.messageHash, ZkBobPoolAlias.BOB_GOERLI)
+
           console.log('Logged')
           console.log(client)
           console.log('HERE', client.networkName())

@@ -6,10 +6,10 @@ module.exports = function override(config) {
     stream: require.resolve('stream-browserify'),
     assert: require.resolve('assert'),
     http: require.resolve('stream-http'),
-    zlib: require.resolve('browserify-zlib'),
     https: require.resolve('https-browserify'),
     os: require.resolve('os-browserify'),
     url: require.resolve('url'),
+    zlib: require.resolve('browserify-zlib'),
   })
   config.resolve.fallback = fallback
   config.plugins = (config.plugins || []).concat([
