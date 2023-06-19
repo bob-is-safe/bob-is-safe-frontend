@@ -11,7 +11,7 @@ import safeAbi from '../contracts-abi/safe-abi.json'
 import { AppStatus } from '../constants'
 import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
 import { test1inch } from '../swap'
-
+console.log("ciao!")
 interface Web3ContextType {
   setAppStatus: Dispatch<any>
   setIsModuleEnabled: Dispatch<any>
