@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 import { createContext, type ReactNode, useEffect, useState, type Dispatch } from 'react'
 import { ethers } from 'ethers'
-import { MODULE_FACTORY_CONTRACT_ADDRESS } from '../constants'
+import { MODULE_FACTORY_CONTRACT_ADDRESS, AppStatus } from '../constants'
 import { useSafeAppsSDK } from '@safe-global/safe-apps-react-sdk'
 import factoryAbi from '../contracts-abi/factory-abi.json'
 import moduleAbi from '../contracts-abi/bob-module-abi.json'
 
 import safeAbi from '../contracts-abi/safe-abi.json'
 
-import { AppStatus } from '../constants'
 import Safe, { EthersAdapter, getSafeContract } from '@safe-global/protocol-kit'
 import { test1inch } from '../swap'
-console.log("ciao!")
+
 interface Web3ContextType {
   setAppStatus: Dispatch<any>
   setIsModuleEnabled: Dispatch<any>
@@ -27,9 +26,9 @@ interface Web3ContextType {
 }
 
 export const Web3Context = createContext<Web3ContextType>({
-  setAppStatus: () => { },
-  setIsModuleEnabled: () => { },
-  setBobModuleAddress: () => { },
+  setAppStatus: () => {},
+  setIsModuleEnabled: () => {},
+  setBobModuleAddress: () => {},
 
   appStatus: AppStatus.INITIAL,
   provider: {} as ethers.providers.Web3Provider,
@@ -37,14 +36,14 @@ export const Web3Context = createContext<Web3ContextType>({
   safeContract: {} as ethers.Contract,
   factoryContract: {} as ethers.Contract,
   isModuleEnabled: false,
-  bobModuleAddress: ''
+  bobModuleAddress: '',
 })
 
 /**
  * @todo provide the function retrieve the tx history
  */
 export const Web3Provider = ({ children }: { children: ReactNode }) => {
-  const { sdk, safe, connected } = useSafeAppsSDK()
+  const { safe } = useSafeAppsSDK()
   const [appStatus, setAppStatus] = useState<any>(AppStatus.INITIAL)
   const [isModuleEnabled, setIsModuleEnabled] = useState<boolean>(false)
   const [bobModuleAddress, setBobModuleAddress] = useState<string>('')
@@ -57,33 +56,31 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
 
   const safeContract = new ethers.Contract(safe.safeAddress, safeAbi, provider)
 
-
-
   const getBobModules = async () => {
-    console.log(`Getting the factory events...`);
-    let module;
+    console.log('Getting the factory events...')
+    let module
     const bn = await provider.getBlockNumber()
     const rawLogs = await provider.getLogs({
       address: MODULE_FACTORY_CONTRACT_ADDRESS,
       topics: [
-        "0x2150ada912bf189ed721c44211199e270903fc88008c2a1e1e889ef30fe67c5f",
+        '0x2150ada912bf189ed721c44211199e270903fc88008c2a1e1e889ef30fe67c5f',
         null,
-        "0x000000000000000000000000180aa3df799e7778535c396145d4f56d4b567516"
+        '0x000000000000000000000000180aa3df799e7778535c396145d4f56d4b567516',
       ],
       fromBlock: 0,
-      toBlock: bn
-    });
+      toBlock: bn,
+    })
 
-    if (rawLogs)
+    if (rawLogs) {
       module = `0x${rawLogs[rawLogs.length - 1].topics[1].slice(26)}`
-    else
+    } else {
       module = ''
+    }
 
     return module
   }
 
-
-  //TOFIX events not emitted
+  // TOFIX events not emitted
   useEffect(() => {
     test1inch()
     if (bobModuleAddress) {
@@ -95,8 +92,6 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
         setAppStatus(AppStatus.TX_SUCCESS)
       })
     }
-
-
   }, [bobModuleAddress, isModuleEnabled])
 
   useEffect(() => {
@@ -117,15 +112,14 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     try {
       const ethAdapter = new EthersAdapter({
         ethers,
-        signerOrProvider: new ethers.providers.Web3Provider(window.ethereum)
+        signerOrProvider: new ethers.providers.Web3Provider(window.ethereum),
       })
       const safeSDK = await Safe.create({
         ethAdapter,
-        safeAddress: safe.safeAddress
+        safeAddress: safe.safeAddress,
       })
       const bobModuleAddress = await getBobModules()
       if (bobModuleAddress) {
-
         const isEnabled = await safeSDK.isModuleEnabled(bobModuleAddress)
         setBobModuleAddress(bobModuleAddress)
         if (isEnabled) {
@@ -139,20 +133,24 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
     }
   }
 
-  return (<Web3Context.Provider value={{
-    setAppStatus,
-    setIsModuleEnabled,
-    setBobModuleAddress,
-    appStatus,
-    provider,
-    signer,
-    safeContract,
-    isModuleEnabled,
-    factoryContract,
-    bobModuleAddress
-  }}>
-    {children}
-  </Web3Context.Provider>)
+  return (
+    <Web3Context.Provider
+      value={{
+        setAppStatus,
+        setIsModuleEnabled,
+        setBobModuleAddress,
+        appStatus,
+        provider,
+        signer,
+        safeContract,
+        isModuleEnabled,
+        factoryContract,
+        bobModuleAddress,
+      }}
+    >
+      {children}
+    </Web3Context.Provider>
+  )
 }
 
 export const Web3Consumer = Web3Context.Consumer
