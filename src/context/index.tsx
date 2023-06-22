@@ -82,7 +82,8 @@ export const Web3Provider = ({ children }: { children: ReactNode }) => {
 
   // TOFIX events not emitted
   useEffect(() => {
-    test1inch()
+    debugger
+    // test1inch()
     if (bobModuleAddress) {
       const bobModule = new ethers.Contract(bobModuleAddress, moduleAbi, provider)
       console.log('inside inside module useffect', bobModule)
